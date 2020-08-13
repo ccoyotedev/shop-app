@@ -3,12 +3,9 @@ import {
   ADD_TO_CART,
   REMOVE_FROM_CART,
 } from "../actions/cart";
-import CartItem from "../../models/cartItem";
+import CartItem, { CartItems } from "../../models/cartItem";
 import Product from "../../models/product";
-
-interface CartItems {
-  [key: string]: CartItem;
-}
+import { ADD_ORDER } from "../actions/order";
 
 export interface CartState {
   cartItems: CartItems;
@@ -62,6 +59,9 @@ export default (state = initialState, action: CartActionTypes): CartState => {
         cartItems: updatedCartItems,
         totalAmount: state.totalAmount - selectedCartItem.productPrice
       }
+    case ADD_ORDER: {
+      return initialState;
+    }
     default:
       return state;
   }

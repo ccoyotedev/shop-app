@@ -12,4 +12,8 @@ class CartItem {
   }
 }
 
+export interface CartItems {
+  [key: string]: CartItem;
+}
+
 export default CartItem
