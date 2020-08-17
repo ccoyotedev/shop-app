@@ -1,13 +1,12 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, Button, TouchableOpacity, TouchableNativeFeedback, Platform } from "react-native";
-import Colors from "../../constants/Colors";
+import { View, Text, Image, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform } from "react-native";
 
 interface ProductItemProps {
   image: string;
   price: number;
   title: string;
-  onViewDetail: () => void;
-  onAddToCart: () => void;
+  children: React.ReactNode ;
+  onSelect: () => void;
 }
 
 interface TouchableCmpProps {
@@ -31,14 +30,14 @@ const ProductItem: React.FC<ProductItemProps> = ({
   image,
   title,
   price,
-  onViewDetail,
-  onAddToCart,
+  onSelect,
+  children
 }) => {
 
   return (
       <View style={styles.product}>
         <View style={styles.touchable}>
-          <TouchableCmp onPress={onViewDetail}>
+          <TouchableCmp onPress={onSelect}>
             <View style={styles.imageContainer}>
               <Image source={{ uri: image }} style={styles.image} />
             </View>
@@ -47,12 +46,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
               <Text style={styles.price}>£{price.toFixed(2)}</Text>
             </View>
             <View style={styles.actions}>
-              <Button
-                title="View Details"
-                onPress={onViewDetail}
-                color={Colors.primary}
-              />
-              <Button title="To Cart" onPress={onAddToCart} color={Colors.primary} />
+              {children}
             </View>
           </TouchableCmp>
         </View>
@@ -106,7 +100,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    height: "25%",
+    height: "23%",
     paddingHorizontal: 20,
   },
 });
