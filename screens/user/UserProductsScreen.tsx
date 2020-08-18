@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, Platform, Button } from "react-native";
+import { FlatList, Platform, Button, Alert } from "react-native";
 import ProductItem from "../../components/shop/ProductItem";
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 import { DrawerActions } from 'react-navigation-drawer';
@@ -20,6 +20,13 @@ const UserProductsScreen: NavigationStackScreenComponent = ({navigation}) => {
     navigation.navigate('EditProduct', {productId: id})
   }
 
+  const deleteHandler = (id: string) => {
+    Alert.alert("Are you sure?", "Do you really want to delete this item?", [
+      {text: "No", style: 'default'},
+      {text: "Yes", style: 'destructive', onPress: () => {dispatch(productActions.deleteProduct(id))}}
+    ])
+  }
+
   return (
     <FlatList
       data={userProducts}
@@ -38,7 +45,7 @@ const UserProductsScreen: NavigationStackScreenComponent = ({navigation}) => {
           />
           <Button
             title="Delete"
-            onPress={() => {dispatch(productActions.deleteProduct(item.id))}}
+            onPress={() => deleteHandler(item.id)}
             color={Colors.primary}
           />
         </ProductItem>

@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform } from "react-native";
+import Card from '../UI/Card'
 
 interface ProductItemProps {
   image: string;
@@ -35,7 +36,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
 }) => {
 
   return (
-      <View style={styles.product}>
+      <Card styles={styles.product}>
         <View style={styles.touchable}>
           <TouchableCmp onPress={onSelect}>
             <View style={styles.imageContainer}>
@@ -50,19 +51,12 @@ const ProductItem: React.FC<ProductItemProps> = ({
             </View>
           </TouchableCmp>
         </View>
-      </View>
+      </Card>
   );
 };
 
 const styles = StyleSheet.create({
   product: {
-    shadowColor: "black",
-    shadowOpacity: 0.26,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    elevation: 5,
-    borderRadius: 10,
-    backgroundColor: "white",
     height: 300,
     margin: 20
   },
