@@ -43,11 +43,16 @@ export type ProductActionTypes =
   | updateProductAction
   | setProductsAction;
 
-export function deleteProduct(productId: string): ProductActionTypes {
-  return {
-    type: DELETE_PRODUCT,
-    productId,
-  };
+export function deleteProduct(productId: string): AppThunk {
+  return async dispatch => {
+    await fetch(
+      `https://rn-complete-guide-12906.firebaseio.com/products/${productId}.json`,
+      {
+        method: "DELETE",
+      }
+    );
+    dispatch({ type: DELETE_PRODUCT, productId: productId})
+  }
 }
 
 export const fetchProducts = (): AppThunk<Promise<{ result: string }>> => {
@@ -128,14 +133,31 @@ export function updateProduct(
   title: string,
   description: string,
   imageUrl: string
-): ProductActionTypes {
-  return {
-    type: UPDATE_PRODUCT,
-    productData: {
-      id,
-      title,
-      description,
-      imageUrl,
-    },
-  };
+): AppThunk {
+  return async dispatch => {
+    await fetch(
+      `https://rn-complete-guide-12906.firebaseio.com/products/${id}.json`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          imageUrl
+        }),
+      }
+    );
+
+    dispatch({
+      type: UPDATE_PRODUCT,
+      productData: {
+        id,
+        title,
+        description,
+        imageUrl,
+      }
+    })
+  }
 }
