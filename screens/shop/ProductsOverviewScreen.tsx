@@ -15,19 +15,20 @@ import Colors from '../../constants/Colors';
 
 const ProductsOverviewScreen: NavigationStackScreenComponent = ({navigation}) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [error, setError] = useState();
   const products = useSelector((state: RootState) => state.products.availableProducts );
   const dispatch = useDispatch<DispatchThunk>();
 
   const loadProducts = useCallback(async () => {
     setError(undefined);
-    setIsLoading(true);
+    setIsRefreshing(true);
     try {
       await dispatch(productActions.fetchProducts());
     } catch (err) {
       setError(err.message);
     }
-    setIsLoading(false)
+    setIsRefreshing(false);
   }, [dispatch, setIsLoading, setError]);
 
   useEffect(() => {
@@ -38,7 +39,10 @@ const ProductsOverviewScreen: NavigationStackScreenComponent = ({navigation}) =>
   }, [loadProducts]);
 
   useEffect(() => {
-    loadProducts();
+    setIsLoading(true);
+    loadProducts().then(() => {
+      setIsLoading(false);
+    });
   }, [dispatch, loadProducts]);
 
   const selectItemHandler = (id:string, title:string) => {
@@ -75,6 +79,8 @@ const ProductsOverviewScreen: NavigationStackScreenComponent = ({navigation}) =>
 
   return (
     <FlatList
+      onRefresh={loadProducts}
+      refreshing={isRefreshing}
       data={products}
       renderItem={({item}) => 
         <ProductItem

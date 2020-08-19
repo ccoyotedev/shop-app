@@ -1,5 +1,6 @@
-import React from "react";
-import { View, Text, FlatList, Button, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { DispatchThunk } from '../../store/index';
+import { View, Text, FlatList, Button, StyleSheet, ActivityIndicator } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 import CartItem from '../../components/shop/CartItem'
@@ -10,6 +11,8 @@ import Card from "../../components/UI/Card";
 import Colors from "../../constants/Colors";
 
 const CartScreen: NavigationStackScreenComponent = ({}) => {
+  const [ isLoading, setIsLoading ] = useState<boolean>(false);
+
   const cartAmountTotal = useSelector(
     (state: RootState) => state.cart.totalAmount
   );
@@ -27,7 +30,13 @@ const CartScreen: NavigationStackScreenComponent = ({}) => {
     return transformedCartItems.sort((a, b) => a.productId > b.productId ? 1 : -1);
   });
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<DispatchThunk>();
+
+  const sendOrderHandler = async () => {
+    setIsLoading(true);
+    await dispatch(orderActions.addOrder(cartItems, cartAmountTotal));
+    setIsLoading(false);
+  }
 
   return (
     <View style={styles.screen}>
@@ -36,14 +45,16 @@ const CartScreen: NavigationStackScreenComponent = ({}) => {
           Total:{" "}
           <Text style={styles.amount}>${Math.round(Number(cartAmountTotal.toFixed(2)) * 100) / 100}</Text>
         </Text>
-        <Button
-          title="Order Now"
-          onPress={() => {
-            dispatch(orderActions.addOrder(cartItems, cartAmountTotal))
-          }}
-          color={Colors.primary}
-          disabled={cartItems.length <= 0}
-        />
+        {isLoading ? (
+          <ActivityIndicator size="small" color={Colors.primary} />
+        ) : (
+          <Button
+            title="Order Now"
+            onPress={sendOrderHandler}
+            color={Colors.primary}
+            disabled={cartItems.length <= 0}
+          />
+        )}
       </Card>
       <FlatList
         data={cartItems}

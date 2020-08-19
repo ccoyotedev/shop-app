@@ -45,12 +45,17 @@ export type ProductActionTypes =
 
 export function deleteProduct(productId: string): AppThunk {
   return async dispatch => {
-    await fetch(
+    const response = await fetch(
       `https://rn-complete-guide-12906.firebaseio.com/products/${productId}.json`,
       {
         method: "DELETE",
       }
     );
+
+    if (!response.ok) {
+      throw new Error('Something went wrong!')
+    }
+
     dispatch({ type: DELETE_PRODUCT, productId: productId})
   }
 }
@@ -95,7 +100,7 @@ export function createProduct(
   description: string,
   imageUrl: string,
   price: number
-): AppThunk {
+): AppThunk<Promise<{ result: string }>> {
   return async (dispatch) => {
     const response = await fetch(
       "https://rn-complete-guide-12906.firebaseio.com/products.json",
@@ -125,6 +130,7 @@ export function createProduct(
         price,
       },
     });
+    return { result: "Product creation successful"};
   };
 }
 
@@ -133,9 +139,9 @@ export function updateProduct(
   title: string,
   description: string,
   imageUrl: string
-): AppThunk {
+): AppThunk<Promise<{ result: string }>> {
   return async dispatch => {
-    await fetch(
+    const response = await fetch(
       `https://rn-complete-guide-12906.firebaseio.com/products/${id}.json`,
       {
         method: "PATCH",
@@ -150,6 +156,10 @@ export function updateProduct(
       }
     );
 
+    if (!response.ok) {
+      throw new Error('Something went wrong!')
+    }
+
     dispatch({
       type: UPDATE_PRODUCT,
       productData: {
@@ -159,5 +169,6 @@ export function updateProduct(
         imageUrl,
       }
     })
+    return { result: "Product update successful"};
   }
 }
