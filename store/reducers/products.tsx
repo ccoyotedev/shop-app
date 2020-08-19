@@ -4,6 +4,7 @@ import {
   DELETE_PRODUCT,
   CREATE_PRODUCT,
   UPDATE_PRODUCT,
+  SET_PRODUCTS
 } from "../actions/products";
 import PRODUCTS from "../../data/dummy-data";
 
@@ -22,6 +23,11 @@ export default (
   action: ProductActionTypes
 ): ProductsState => {
   switch (action.type) {
+    case SET_PRODUCTS:
+      return {
+        availableProducts: action.products,
+        userProducts: action.products.filter(prod => prod.ownerId === 'u1')
+      }
     case DELETE_PRODUCT:
       return {
         ...state,
@@ -34,7 +40,7 @@ export default (
       };
     case CREATE_PRODUCT:
       const newProduct = new Product(
-        new Date().toString(),
+        action.productData.id,
         "u1",
         action.productData.title,
         action.productData.imageUrl,

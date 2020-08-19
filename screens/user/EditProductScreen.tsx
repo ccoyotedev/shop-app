@@ -1,12 +1,11 @@
 import React, { useEffect, useCallback, useReducer } from "react";
 import {
   View,
-  Text,
   StyleSheet,
   ScrollView,
-  TextInput,
   Platform,
   Alert,
+  KeyboardAvoidingView
 } from "react-native";
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -120,61 +119,63 @@ const EditProductScreen: NavigationStackScreenComponent = ({ navigation }) => {
   }, [dispatchFormState]);
 
   return (
-    <ScrollView>
-      <View style={styles.form}>
-        <Input
-          id="title"
-          label="title"
-          keyboardType="default"
-          autoCapitalize="sentences"
-          autoCorrect
-          returnKeyType="next"
-          errorText="Please enter a valid title!"
-          onInputChange={inputChangeHandler}
-          initialValue={editedProduct ? editedProduct.title : ""}
-          initiallyValid={!!editedProduct}
-          required
-        />
-        <Input
-          id="imageUrl"
-          label="Image Url"
-          keyboardType="default"
-          returnKeyType="next"
-          errorText="Please enter a valid image url!"
-          onInputChange={inputChangeHandler}
-          initialValue={editedProduct ? editedProduct.imageUrl : ""}
-          initiallyValid={!!editedProduct}
-          required
-        />
-        {editedProduct ? null : (
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={100}>
+      <ScrollView>
+        <View style={styles.form}>
           <Input
-            id="price"
-            label="Price"
-            keyboardType="decimal-pad"
+            id="title"
+            label="title"
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
             returnKeyType="next"
-            errorText="Please enter a valid price!"
+            errorText="Please enter a valid title!"
             onInputChange={inputChangeHandler}
+            initialValue={editedProduct ? editedProduct.title : ""}
+            initiallyValid={!!editedProduct}
             required
-            min={0.1}
           />
-        )}
-        <Input
-          id="description"
-          label="Description"
-          keyboardType="default"
-          autoCapitalize="sentences"
-          autoCorrect
-          errorText="Please enter a valid description!"
-          multiline
-          numberOfLines={3}
-          onInputChange={inputChangeHandler}
-          initialValue={editedProduct ? editedProduct.description : ""}
-          initiallyValid={!!editedProduct}
-          minLength={5}
-          required
-        />
-      </View>
-    </ScrollView>
+          <Input
+            id="imageUrl"
+            label="Image Url"
+            keyboardType="default"
+            returnKeyType="next"
+            errorText="Please enter a valid image url!"
+            onInputChange={inputChangeHandler}
+            initialValue={editedProduct ? editedProduct.imageUrl : ""}
+            initiallyValid={!!editedProduct}
+            required
+          />
+          {editedProduct ? null : (
+            <Input
+              id="price"
+              label="Price"
+              keyboardType="decimal-pad"
+              returnKeyType="next"
+              errorText="Please enter a valid price!"
+              onInputChange={inputChangeHandler}
+              required
+              min={0.1}
+            />
+          )}
+          <Input
+            id="description"
+            label="Description"
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
+            errorText="Please enter a valid description!"
+            multiline
+            numberOfLines={3}
+            onInputChange={inputChangeHandler}
+            initialValue={editedProduct ? editedProduct.description : ""}
+            initiallyValid={!!editedProduct}
+            minLength={5}
+            required
+          />
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
